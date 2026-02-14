@@ -1,22 +1,15 @@
-# gitignore inicial creado con ayuda de chatgpt para evitar subir contenido inecesario, confidencial o configuraciones personales de mi entorno
 
-# Entorno virtual (pesado, específico de tu máquina)
 .venv/
 
-# Python cache (basura compilada)
 __pycache__/
 *.pyc
 
-# Archivos de entorno
 .env
 
-# Archivo de entorno de ejemplo
 !.env.example
 
-# Configuraciones personales de tu editor
 .vscode/
 .idea/
 
-# Basura del sistema operativo (Windows/macOS)
 Thumbs.db
 .DS_Store
