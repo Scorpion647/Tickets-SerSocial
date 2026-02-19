@@ -9,3 +9,4 @@ Faker
 pytest
 pytest-django
 ruff
+gunicorn
