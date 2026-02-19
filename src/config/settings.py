@@ -60,6 +60,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    "sersocial.onrender.com"
     "http://localhost:3000",
     "https://tickets-frontend.vercel.app",
     "http://127.0.0.1:3000",
