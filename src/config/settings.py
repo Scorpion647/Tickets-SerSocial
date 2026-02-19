@@ -27,8 +27,6 @@ SECRET_KEY = "django-insecure-fvj#h2w4lgdx13_!lwzb=)nc3o(^#ykwq3q*54a&t)$bwxjhmi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -60,12 +58,12 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "sersocial.onrender.com"
     "http://localhost:3000",
     "https://tickets-frontend.vercel.app",
     "http://127.0.0.1:3000",
 ]
 
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,backend,tickets-sersocial.onrender.com').split(',')
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
