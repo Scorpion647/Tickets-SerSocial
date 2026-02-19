@@ -112,7 +112,7 @@ const handleComentarioSubmit = async (e: React.FormEvent) => {
                     disabled={updating}
                   >
                     <option value="abierto">Abierto</option>
-                    <option value="en proceso">En proceso</option>
+                    <option value="en_proceso">En proceso</option>
                     <option value="resuelto">Resuelto</option>
                     <option value="cerrado">Cerrado</option>
                   </Selecct>

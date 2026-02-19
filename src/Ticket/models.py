@@ -19,7 +19,7 @@ class Ticket(models.Model):
     ]
     SELEC_ESTADO = [
         ("abierto", "Abierto"),
-        ("en proceso", "En proceso"),
+        ("en_proceso", "En proceso"),
         ("resuelto", "Resuelto"),
     ]
 

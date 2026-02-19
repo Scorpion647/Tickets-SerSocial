@@ -1,12 +1,12 @@
 # Tickets-SerSocial
-# Tickets-SerSocial
 
 Sistema de gestión de tickets para solicitudes internas, con backend en **Django + DRF**, frontend en **Next.js** y base de datos **PostgreSQL**.
+
 
 ## 1) Requisitos (versiones sugeridas)
 
 ### Opción A — ejecución local (sin Docker)
-- Python **3.14+**
+- Python **3.12+**
 - Node.js **20+**
 - npm **10+**
 - PostgreSQL **16**
@@ -210,3 +210,21 @@ Opciones disponibles:
 - Abrir `http://localhost:3000` y comprobar listado/creación de tickets.
 - Verificar API en `http://localhost:8000/api/`.
 - Verificar autenticación en endpoints bajo `http://localhost:8000/api/auth/`.
+
+
+
+---
+
+## 8) Guía de despliegue
+
+Se incluye una guía corta para desplegar en:
+- **Local con Docker Compose**
+- **Backend en Render + Frontend en Vercel**
+
+Ver: `docs/despliegue.md`.
+
+---
+
+## 9) Uso responsable de IA
+
+Durante el desarrollo se utilizó IA como apoyo para acelerar tareas repetitivas (documentación, propuestas de estructura y revisión de consistencia), pero todas las decisiones finales de implementación y validación se verificaron manualmente sobre el proyecto. Se hizo uso de Chat GPT 5.2

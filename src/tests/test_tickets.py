@@ -31,7 +31,7 @@ class TestTicketAPI:
             titulo="T1", descripcion="D1", categoria="soporte", prioridad="media", estado="abierto", creado_por=user
         )
         Ticket.objects.create(
-            titulo="T2", descripcion="D2", categoria="soporte", prioridad="media", estado="cerrado", creado_por=user
+            titulo="T2", descripcion="D2", categoria="soporte", prioridad="media", estado="resuelto", creado_por=user
         )
         response = authenticated_client.get("/api/Ticket/?estado=abierto")
         assert response.status_code == status.HTTP_200_OK
