@@ -5,3 +5,7 @@ django-filter
 psycopg[binary]
 python-dotenv
 djangorestframework-simplejwt
+Faker
+pytest
+pytest-django
+ruff

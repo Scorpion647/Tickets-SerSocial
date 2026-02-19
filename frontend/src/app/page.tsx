@@ -1,65 +1,128 @@
-import Image from "next/image";
+"use client";
+import Navbar from "@/components/Navbar";
+import { Button } from "@/components/UI/Button";
+import Input from "@/components/UI/Input";
+import { fetchAPI } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Home() {
+  const [login, setlogin] = useState(true)
+  const router = useRouter();
+  const [formDatalogin, setFormDatalogin] = useState({
+    email: '',
+    contraseña: '',
+  });
+  const [formDataregister, setFormDataregister] = useState({
+    nombre: '',
+    email: '',
+    contraseña: '',
+    repcontraseña: '',
+  });
+
+  const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const promise = fetchAPI('/auth/login/', {
+    method: 'POST',
+    body: JSON.stringify({
+      username: formDatalogin.email,
+      password: formDatalogin.contraseña,
+    }),
+  });
+
+  toast.promise(promise, {
+    loading: 'Iniciando sesión...',
+    success: (data) => {
+      localStorage.setItem('access_token', data.access);
+      localStorage.setItem('refresh_token', data.refresh);
+      router.push('/tickets');
+      return '¡Bienvenido!';
+    },
+    error: (err) => {
+      return err.message || 'Credenciales inválidas';
+    },
+  });
+};
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formDataregister.contraseña !== formDataregister.repcontraseña) {
+      toast.error('Las contraseñas no coinciden');
+      return;
+    }
+
+    const promise = fetchAPI('/auth/register/', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: formDataregister.email,
+        email: formDataregister.email,
+        password: formDataregister.contraseña,
+        first_name: formDataregister.nombre,
+        rol: 'solicitante',
+      }),
+    });
+
+    toast.promise(promise, {
+      loading: 'Registrando...',
+      success: () => {
+        setlogin(true);
+        setFormDatalogin({ email: formDataregister.email, contraseña: '' });
+        setFormDataregister({ nombre: '', email: '', contraseña: '', repcontraseña: '' });
+        return 'Registro exitoso. Inicia sesión.';
+      },
+      error: 'Error en el registro. El email puede ya existir.',
+    });
+  };
+
+    const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    router.push('/');
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <Navbar user={null} onLogout={handleLogout} bg={true}>
+      <div className="h-full flex justify-center sm:justify-end items-center">
+        <div className={` bg-white/90 rounded-lg shadow-2xl sm:w-1/4  px-10 py-10 sm:mr-24 text-center text-black flex flex-col gap-5 ${login ? "sm:mt-28 mt-16" : "sm:mt-20 mt-12"}`}>
+          {login ?
+            <>
+              <h1 className="font-extrabold text-blue-700">INICIAR SESIÓN</h1>
+              <form onSubmit={handleLogin} className="flex flex-col gap-5">
+                <Input value={formDatalogin.email} onChange={(e: { target: { value: string; }; }) => setFormDatalogin({ ...formDatalogin, email: e.target.value })}
+                type="email" placeholder="Email" />
+                <Input value={formDatalogin.contraseña} onChange={(e: { target: { value: string; }; }) => setFormDatalogin({ ...formDatalogin, contraseña: e.target.value })}
+                type="password" placeholder="Contraseña" />
+                <p className="text-blue-700  cursor-pointer hover:underline">¿Olvidaste tu contraseña?</p>
+                <Button type="submit">Iniciar sesión</Button>
+              </form>
+              <div>
+                <p className="text-black ">¿No estas registrado?</p>
+                <p onClick={() => { setlogin(false) }} className=" text-blue-700 cursor-pointer hover:underline">Registrese aqui</p>
+              </div>
+            </>
+            :
+            <>
+              <h1 className="font-extrabold text-blue-700">REGISTRO</h1>
+              <form onSubmit={handleRegister} className="flex flex-col gap-5">
+                <Input value={formDataregister.nombre} onChange={(e: { target: { value: string; }; }) => setFormDataregister({ ...formDataregister, nombre: e.target.value })}
+                type="text" placeholder="Nombre" />
+                <Input value={formDataregister.email} onChange={(e: { target: { value: string; }; }) => setFormDataregister({ ...formDataregister, email: e.target.value })}
+                type="email" placeholder="Email" />
+                <Input value={formDataregister.contraseña} onChange={(e: { target: { value: string; }; }) => setFormDataregister({ ...formDataregister, contraseña: e.target.value })}
+                type="password" placeholder="Contraseña" />
+                <Input value={formDataregister.repcontraseña} onChange={(e: { target: { value: string; }; }) => setFormDataregister({ ...formDataregister, repcontraseña: e.target.value })}
+                type="password" placeholder="Confirmar Contraseña" />
+                <div>
+                  <p>¿Ya estas registrado?</p>
+                  <p onClick={() => { setlogin(true) }} className="text-blue-700  cursor-pointer hover:underline">Inicie sesion aqui</p>
+                </div>
+                <Button type="submit">Registrar</Button>
+              </form>
+            </>
+          }
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+    </Navbar>
   );
 }
